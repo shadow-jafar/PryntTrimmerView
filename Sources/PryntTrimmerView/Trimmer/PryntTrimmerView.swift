@@ -148,11 +148,11 @@ public protocol TrimmerViewDelegate: class {
         leftHandleTimeLbl.heightAnchor.constraint(equalToConstant: 20).isActive = true
         leftHandleTimeLbl.widthAnchor.constraint(equalToConstant: 35).isActive = true
         leftHandleTimeLbl.topAnchor.constraint(equalTo: leftHandleView.topAnchor, constant: 2).isActive = true
-        leftHandleTimeLbl.centerXAnchor.constraint(equalTo: leftHandleView.centerXAnchor).isActive = true
-        
-        leftHandleTimeLbl.backgroundColor = .white
+        leftHandleTimeLbl.leadingAnchor.constraint(equalTo: leftHandleView.leadingAnchor, constant: 10.0).isActive = true
+        leftHandleTimeLbl.textColor = .white
         leftHandleTimeLbl.layer.cornerRadius = 3
-        leftHandleTimeLbl.textAlignment = .center
+        leftHandleTimeLbl.textAlignment = .right
+        leftHandleTimeLbl.font = UIFont.boldSystemFont(ofSize: 12)
         leftHandleTimeLbl.adjustsFontSizeToFitWidth = true
         
         rightHandleView.isUserInteractionEnabled = true
@@ -179,11 +179,11 @@ public protocol TrimmerViewDelegate: class {
         rightHandleTimeLbl.heightAnchor.constraint(equalToConstant: 20).isActive = true
         rightHandleTimeLbl.widthAnchor.constraint(equalToConstant: 35).isActive = true
         rightHandleTimeLbl.topAnchor.constraint(equalTo: leftHandleView.topAnchor, constant: 2).isActive = true
-        rightHandleTimeLbl.centerXAnchor.constraint(equalTo: rightHandleView.centerXAnchor).isActive = true
-
-        rightHandleTimeLbl.backgroundColor = .white
+        rightHandleTimeLbl.trailingAnchor.constraint(equalTo: rightHandleView.trailingAnchor, constant: 1.0).isActive = true
+        rightHandleTimeLbl.font = UIFont.boldSystemFont(ofSize: 12)
+        rightHandleTimeLbl.textColor = .white
         rightHandleTimeLbl.layer.cornerRadius = 3
-        rightHandleTimeLbl.textAlignment = .center
+        rightHandleTimeLbl.textAlignment = .left
         rightHandleTimeLbl.adjustsFontSizeToFitWidth = true
     }
     
@@ -315,7 +315,15 @@ public protocol TrimmerViewDelegate: class {
     override func assetDidChange(newAsset: AVAsset?) {
         super.assetDidChange(newAsset: newAsset)
         resetHandleViewPosition()
+        updateHandleTimeLabelShadeColor()
+        updateStartTimeandEndTime()
     }
+    
+    fileprivate func updateHandleTimeLabelShadeColor() {
+        leftHandleTimeLbl.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        rightHandleTimeLbl.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+    }
+    
 
     private func resetHandleViewPosition() {
         leftConstraint?.constant = 0
