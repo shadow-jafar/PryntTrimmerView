@@ -68,7 +68,8 @@ public protocol TrimmerViewDelegate: class {
     private let rightHandleKnob = UIView()
     private let leftMaskView = UIView()
     private let rightMaskView = UIView()
-
+    private let leftHandleTimeLbl = UILabel()
+    private let rightHandleTimeLbl = UILabel()
     // MARK: Constraints
 
     private var currentLeftConstraint: CGFloat = 0
@@ -141,6 +142,19 @@ public protocol TrimmerViewDelegate: class {
         leftHandleKnob.centerYAnchor.constraint(equalTo: leftHandleView.centerYAnchor).isActive = true
         leftHandleKnob.centerXAnchor.constraint(equalTo: leftHandleView.centerXAnchor).isActive = true
 
+        leftHandleTimeLbl.translatesAutoresizingMaskIntoConstraints = false
+        leftHandleView.addSubview(leftHandleTimeLbl)
+
+        leftHandleTimeLbl.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        leftHandleTimeLbl.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        leftHandleTimeLbl.topAnchor.constraint(equalTo: leftHandleView.topAnchor, constant: 2).isActive = true
+        leftHandleTimeLbl.centerXAnchor.constraint(equalTo: leftHandleView.centerXAnchor).isActive = true
+        
+        leftHandleTimeLbl.backgroundColor = .white
+        leftHandleTimeLbl.layer.cornerRadius = 3
+        leftHandleTimeLbl.textAlignment = .center
+        leftHandleTimeLbl.adjustsFontSizeToFitWidth = true
+        
         rightHandleView.isUserInteractionEnabled = true
         rightHandleView.layer.cornerRadius = 2.0
         rightHandleView.translatesAutoresizingMaskIntoConstraints = false
@@ -158,6 +172,33 @@ public protocol TrimmerViewDelegate: class {
         rightHandleKnob.widthAnchor.constraint(equalToConstant: 2).isActive = true
         rightHandleKnob.centerYAnchor.constraint(equalTo: rightHandleView.centerYAnchor).isActive = true
         rightHandleKnob.centerXAnchor.constraint(equalTo: rightHandleView.centerXAnchor).isActive = true
+        
+        rightHandleTimeLbl.translatesAutoresizingMaskIntoConstraints = false
+        rightHandleView.addSubview(rightHandleTimeLbl)
+
+        rightHandleTimeLbl.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        rightHandleTimeLbl.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        rightHandleTimeLbl.topAnchor.constraint(equalTo: leftHandleView.topAnchor, constant: 2).isActive = true
+        rightHandleTimeLbl.centerXAnchor.constraint(equalTo: rightHandleView.centerXAnchor).isActive = true
+
+        rightHandleTimeLbl.backgroundColor = .white
+        rightHandleTimeLbl.layer.cornerRadius = 3
+        rightHandleTimeLbl.textAlignment = .center
+        rightHandleTimeLbl.adjustsFontSizeToFitWidth = true
+    }
+    
+    private func cmTimeToSeconds(_ time: CMTime?) -> String? {
+        guard let videoTime = time else { return nil }
+        let seconds = CMTimeGetSeconds(videoTime)
+        guard !seconds.isNaN else { return nil }
+        let secondsText = String(format: "%02d", Int(seconds) % 60)
+        let minutesText = String(format: "%02d", Int(seconds) / 60)
+        return "\(minutesText):\(secondsText)"
+    }
+    
+    private func updateStartTimeandEndTime(){
+        leftHandleTimeLbl.text = cmTimeToSeconds(startTime)
+        rightHandleTimeLbl.text = cmTimeToSeconds(endTime)
     }
 
     private func setupMaskView() {
@@ -249,6 +290,7 @@ public protocol TrimmerViewDelegate: class {
                 seek(to: endTime)
             }
             updateSelectedTime(stoppedMoving: false)
+            updateStartTimeandEndTime()
 
         case .cancelled, .ended, .failed:
             updateSelectedTime(stoppedMoving: true)
@@ -294,6 +336,7 @@ public protocol TrimmerViewDelegate: class {
             positionConstraint?.constant = normalizedPosition
             layoutIfNeeded()
         }
+        updateStartTimeandEndTime()
     }
 
     /// The selected start time for the current asset.
